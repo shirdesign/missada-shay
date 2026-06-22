@@ -14,7 +14,7 @@ export default function CartPanel({ onClose }: Props) {
       parts.push(item.customization.extras.map(id => EXTRAS.find(e => e.id === id)?.name).filter(Boolean).join(', '))
     }
     if (item.customization?.remove?.length) {
-      parts.push('ללא: ' + item.customization.remove.join(', '))
+      parts.push('בלי: ' + item.customization.remove.join(', '))
     }
     return parts.join(' | ')
   }
@@ -35,12 +35,11 @@ export default function CartPanel({ onClose }: Props) {
         transition={{ type: 'spring', damping: 25 }}
         className="w-96 bg-bg-card h-full flex flex-col border-r border-white/10"
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <button onClick={onClose} className="text-white/60 hover:text-white transition-colors">
             <X size={22} />
           </button>
-          <h2 className="text-white font-bold text-lg">סל ההזמנות</h2>
+          <h2 className="text-white font-bold text-lg">🛒 ההזמנה שלי</h2>
           {cart.length > 0 && (
             <button onClick={clearCart} className="text-dark-red text-sm hover:text-dark-red-light transition-colors">
               נקה הכל
@@ -48,12 +47,11 @@ export default function CartPanel({ onClose }: Props) {
           )}
         </div>
 
-        {/* Items */}
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {cart.length === 0 ? (
             <div className="text-center text-white/30 py-20">
               <div className="text-5xl mb-3">🛒</div>
-              <p>הסל ריק</p>
+              <p>הסל ריק — בואו נמלא אותו!</p>
             </div>
           ) : cart.map(item => (
             <div key={item.id} className="bg-bg-card-2 rounded-2xl p-4">
@@ -70,7 +68,9 @@ export default function CartPanel({ onClose }: Props) {
                     <p className="text-white/40 text-xs mt-1">{getCustomLabel(item)}</p>
                   )}
                   <div className="flex items-center justify-between mt-2">
-                    <span className="text-dark-red font-bold">₪{item.unitPrice * item.quantity}</span>
+                    <span className="text-gold font-bold">
+                      {item.unitPrice * item.quantity === 0 ? 'חינם!' : `🪙${item.unitPrice * item.quantity}`}
+                    </span>
                     <div className="flex items-center gap-2 bg-bg-card rounded-xl px-2 py-1">
                       <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="text-white/60 hover:text-white transition-colors">
                         <Minus size={14} />
@@ -87,19 +87,18 @@ export default function CartPanel({ onClose }: Props) {
           ))}
         </div>
 
-        {/* Footer */}
         {cart.length > 0 && (
           <div className="p-5 border-t border-white/10 space-y-4">
             <div className="flex justify-between text-white">
-              <span className="font-black text-xl text-dark-red">₪{cartTotal}</span>
-              <span className="font-bold text-lg">סה"כ</span>
+              <span className="font-black text-2xl text-gold">🪙{cartTotal}</span>
+              <span className="font-bold text-lg">סה"כ מטבעות</span>
             </div>
             <motion.button
               whileTap={{ scale: 0.97 }}
               onClick={() => { setScreen('checkout'); onClose() }}
               className="w-full bg-dark-red hover:bg-dark-red-light text-white font-bold py-4 rounded-xl transition-colors text-lg"
             >
-              לסיום הזמנה
+              לסיום הזמנה 🍽️
             </motion.button>
           </div>
         )}

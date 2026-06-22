@@ -19,11 +19,6 @@ export interface BreadChoice {
   name: string
 }
 
-export interface CookingLevel {
-  id: string
-  name: string
-}
-
 export interface Extra {
   id: string
   name: string
@@ -32,7 +27,6 @@ export interface Extra {
 
 export interface Customization {
   bread?: string
-  cooking?: string
   extras: string[]
   remove: string[]
 }

@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import { CheckCircle } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 
 export default function ConfirmationScreen() {
@@ -8,17 +7,18 @@ export default function ConfirmationScreen() {
 
   return (
     <div className="w-full h-full bg-bg-black flex items-center justify-center p-8">
+      {/* Confetti */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(20)].map((_, i) => (
+        {[...Array(24)].map((_, i) => (
           <motion.div
             key={i}
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: '110vh', opacity: [0, 1, 1, 0] }}
-            transition={{ delay: i * 0.15, duration: 3 + Math.random() * 2, ease: 'linear' }}
+            transition={{ delay: i * 0.12, duration: 3 + (i % 3) * 0.5, ease: 'linear' }}
             className="absolute text-2xl"
-            style={{ left: `${Math.random() * 100}%` }}
+            style={{ left: `${(i * 4.2) % 100}%` }}
           >
-            {['🎉', '🍔', '⭐', '🔥', '✨'][i % 5]}
+            {['🎉', '🍳', '⭐', '🪙', '✨', '🎊', '🥪', '😋'][i % 8]}
           </motion.div>
         ))}
       </div>
@@ -33,23 +33,13 @@ export default function ConfirmationScreen() {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 0.3, type: 'spring' }}
-          className="flex justify-center mb-6"
+          className="text-8xl mb-4"
         >
-          <div className="relative">
-            <CheckCircle size={80} className="text-dark-red" />
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.5 }}
-              className="absolute -top-2 -right-2 text-3xl"
-            >
-              🍔
-            </motion.div>
-          </div>
+          👨‍🍳
         </motion.div>
 
-        <h1 className="text-white text-3xl font-black mb-2">ההזמנה נשלחה בהצלחה למטבח!</h1>
-        <p className="text-white/50 mb-8">הצוות שלנו מכין את הארוחה שלך</p>
+        <h1 className="text-white text-3xl font-black mb-1">ההזמנה נשלחה לשי!</h1>
+        <p className="text-white/50 mb-6 text-lg">שי הולך למטבח עכשיו להכין... 🍳</p>
 
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-bg-card-2 rounded-2xl p-4">
@@ -64,18 +54,20 @@ export default function ConfirmationScreen() {
 
         {/* Items */}
         <div className="bg-bg-card-2 rounded-2xl p-4 mb-6 text-right">
-          <h3 className="text-white/60 text-sm mb-3">פריטים שהוזמנו</h3>
+          <h3 className="text-white/60 text-sm mb-3">מה הזמנת?</h3>
           <div className="space-y-2">
             {lastOrder.items.map(item => (
               <div key={item.id} className="flex justify-between text-sm">
-                <span className="text-dark-red font-bold">₪{item.unitPrice * item.quantity}</span>
+                <span className="text-gold font-bold">
+                  {item.unitPrice * item.quantity === 0 ? 'חינם!' : `🪙${item.unitPrice * item.quantity}`}
+                </span>
                 <span className="text-white">{item.menuItem.name} × {item.quantity}</span>
               </div>
             ))}
           </div>
           <div className="border-t border-white/10 mt-3 pt-3 flex justify-between font-bold">
-            <span className="text-dark-red text-lg">₪{lastOrder.total}</span>
-            <span className="text-white">סה"כ</span>
+            <span className="text-gold text-lg">🪙{lastOrder.total}</span>
+            <span className="text-white">סה"כ מטבעות שי</span>
           </div>
         </div>
 
@@ -85,6 +77,10 @@ export default function ConfirmationScreen() {
             <span className="text-white text-sm">{lastOrder.notes}</span>
           </div>
         )}
+
+        <div className="bg-dark-red/10 border border-dark-red/20 rounded-xl p-3 mb-6">
+          <p className="text-white/60 text-sm">🪙 זכרו — מטבעות שי הם לא כסף אמיתי! זה רק משחק 😄</p>
+        </div>
 
         <div className="flex gap-3">
           <motion.button

@@ -1,220 +1,206 @@
-import { MenuItem, BreadChoice, CookingLevel, Extra } from '../types'
+import { MenuItem, BreadChoice, Extra } from '../types'
+
+// 🪙 מטבעות שי - not real money!
+export const COIN = '🪙'
 
 export const MENU_ITEMS: MenuItem[] = [
-  // Burgers
+  // 🥪 כריכים
   {
-    id: 'b1', name: 'המבורגר קלאסי', category: 'burgers',
-    description: 'קציצת בקר 220 גרם, חסה, עגבנייה, בצל סגול, חמוצים ורוטב הבית.',
-    price: 59, image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80',
+    id: 'k1', name: 'כריך גבינה מיוחד', category: 'burgers',
+    description: 'לחם לבן, גבינה צהובה מותכת, עגבנייה ומלפפון. קלאסיק של שי!',
+    price: 4, image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&q=80',
     bestseller: true, customizable: true,
   },
   {
-    id: 'b2', name: "צ'יזבורגר", category: 'burgers',
-    description: "המבורגר בקר עם גבינת צ'דר מותכת וירקות טריים.",
-    price: 64, image: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&q=80',
+    id: 'k2', name: 'טוסט שי', category: 'burgers',
+    description: 'טוסט חם עם גבינה נמסה וקטשופ. יוצא מושלם תמיד!',
+    price: 3, image: 'https://images.unsplash.com/photo-1619096252214-ef06c45683e3?w=600&q=80',
     bestseller: true, customizable: true,
   },
   {
-    id: 'b3', name: 'דאבל בורגר', category: 'burgers',
-    description: "שתי קציצות בקר, גבינת צ'דר כפולה ורטב הבית.",
-    price: 79, image: 'https://images.unsplash.com/photo-1607013251379-e6eecfffe234?w=600&q=80',
+    id: 'k3', name: 'כריך ממרח שוקולד', category: 'burgers',
+    description: 'לחם טרי עם ממרח שוקולד ואגוזים. הכי טוב בבוקר!',
+    price: 3, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',
     featured: true, customizable: true,
   },
   {
-    id: 'b4', name: 'BBQ Smoke', category: 'burgers',
-    description: 'המבורגר בקר, בצל מקורמל, רוטב ברביקיו ובייקון בקר.',
-    price: 72, image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&q=80',
+    id: 'k4', name: 'כריך חמאת בוטנים', category: 'burgers',
+    description: 'לחם עם חמאת בוטנים ודבש. שילוב מנצח!',
+    price: 3, image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80',
     featured: true, customizable: true,
   },
   {
-    id: 'b5', name: 'ספייסי מקס', category: 'burgers',
-    description: "המבורגר חריף עם חלפיניו, צ'ילי מתוק ומיונז פיקנטי.",
-    price: 68, image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=600&q=80',
-    tags: ['spicy'], customizable: true,
+    id: 'k5', name: 'פרנץ׳ טוסט', category: 'burgers',
+    description: 'ביצה, חלב, לחם על המחבת. מפדר אבל כיף להכין!',
+    price: 5, image: 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=600&q=80',
+    chefsPick: true, customizable: true,
   },
   {
-    id: 'b6', name: 'טראפל בורגר', category: 'burgers',
-    description: 'המבורגר פרימיום עם איולי כמהין, פטריות מוקפצות ובצל מקורמל.',
-    price: 78, image: 'https://images.unsplash.com/photo-1621236378699-8597faf6a176?w=600&q=80',
-    featured: true, chefsPick: true, customizable: true,
+    id: 'k6', name: 'כריך ביצה מקושקשת', category: 'burgers',
+    description: 'ביצה מקושקשת רכה עם מלח ופלפל על לחם. שי עשה לבד!',
+    price: 4, image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80',
+    featured: true, customizable: true,
   },
   {
-    id: 'b7', name: "וג'י בורגר", category: 'burgers',
-    description: 'קציצת ירקות איכותית עם חסה, עגבנייה ואיולי שום.',
-    price: 58, image: 'https://images.unsplash.com/photo-1520072959219-c595dc870360?w=600&q=80',
+    id: 'k7', name: 'פיתה עם חומוס', category: 'burgers',
+    description: 'פיתה חמה עם חומוס וסלט ירקות. פשוט ומעולה!',
+    price: 3, image: 'https://images.unsplash.com/photo-1593001874117-c99c800e3eb0?w=600&q=80',
     tags: ['vegetarian', 'vegan'], customizable: true,
   },
-  // Sides
+
+  // 🥗 תוספות
   {
-    id: 's1', name: "צ'יפס קלאסי", category: 'sides',
-    description: 'צ\'יפס פריך וזהוב',
-    price: 18, image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&q=80',
-  },
-  {
-    id: 's2', name: 'צ\'יפס בטטה', category: 'sides',
-    description: 'צ\'יפס בטטה קריספי עם תיבול ביתי',
-    price: 22, image: 'https://images.unsplash.com/photo-1585109649139-366815a0d713?w=600&q=80',
+    id: 's1', name: 'סלט ירקות של שי', category: 'sides',
+    description: 'עגבנייה, מלפפון, גזר וזיתים. שי חותך הכל לבד!',
+    price: 2, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80',
     tags: ['vegan'],
   },
   {
-    id: 's3', name: 'טבעות בצל', category: 'sides',
-    description: 'טבעות בצל בציפוי פריך',
-    price: 24, image: 'https://images.unsplash.com/photo-1639024471283-03518883512d?w=600&q=80',
-  },
-  {
-    id: 's4', name: 'כדורי פירה', category: 'sides',
-    description: 'כדורי פירה קרמי ופריך מבחוץ',
-    price: 24, image: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?w=600&q=80',
-  },
-  {
-    id: 's5', name: 'כנפיים ברוטב BBQ (6 יחידות)', category: 'sides',
-    description: 'כנפיים עסיסיות ברוטב ברביקיו מתוק-חריף',
-    price: 34, image: 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=600&q=80',
-  },
-  {
-    id: 's6', name: 'כנפיים חריפות (6 יחידות)', category: 'sides',
-    description: 'כנפיים עסיסיות ברוטב חריף מיוחד',
-    price: 34, image: 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=600&q=80',
-    tags: ['spicy'],
-  },
-  // Drinks
-  {
-    id: 'd1', name: 'קוקה קולה', category: 'drinks',
-    description: '', price: 12,
-    image: 'https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=600&q=80',
-  },
-  {
-    id: 'd2', name: 'קוקה קולה זירו', category: 'drinks',
-    description: '', price: 12,
-    image: 'https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=600&q=80',
-  },
-  {
-    id: 'd3', name: 'ספרייט', category: 'drinks',
-    description: '', price: 12,
-    image: 'https://images.unsplash.com/photo-1624552184280-9e48f3a87f5f?w=600&q=80',
-  },
-  {
-    id: 'd4', name: 'פיוז טי', category: 'drinks',
-    description: '', price: 12,
-    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80',
-  },
-  {
-    id: 'd5', name: 'תפוזים', category: 'drinks',
-    description: '', price: 12,
-    image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=600&q=80',
-  },
-  {
-    id: 'd6', name: 'ענבים', category: 'drinks',
-    description: '', price: 12,
-    image: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=600&q=80',
-  },
-  {
-    id: 'd7', name: 'מים מינרליים', category: 'drinks',
-    description: '', price: 10,
-    image: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=600&q=80',
-  },
-  {
-    id: 'd8', name: 'סודה', category: 'drinks',
-    description: '', price: 10,
-    image: 'https://images.unsplash.com/photo-1582106245687-cbb466a9f07f?w=600&q=80',
-  },
-  // Beer
-  {
-    id: 'beer1', name: 'גולדסטאר', category: 'beer',
-    description: '', price: 24,
-    image: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=600&q=80',
-  },
-  {
-    id: 'beer2', name: 'היינקן', category: 'beer',
-    description: '', price: 28,
-    image: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=600&q=80',
-  },
-  {
-    id: 'beer3', name: 'ווינשטפן', category: 'beer',
-    description: '', price: 32,
-    image: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=600&q=80',
-  },
-  {
-    id: 'beer4', name: 'קרלסברג', category: 'beer',
-    description: '', price: 28,
-    image: 'https://images.unsplash.com/photo-1608270586620-248524c67de9?w=600&q=80',
-  },
-  // Desserts
-  {
-    id: 'des1', name: 'עוגת שוקולד חמה', category: 'desserts',
-    description: 'עוגת שוקולד חמה עם גלידת וניל',
-    price: 34, image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80',
-  },
-  {
-    id: 'des2', name: 'וופל בלגי', category: 'desserts',
-    description: 'וופל בלגי עם קצפת ופירות יער',
-    price: 38, image: 'https://images.unsplash.com/photo-1562376552-0d160a2f238d?w=600&q=80',
+    id: 's2', name: 'קורנפלקס במיצוע', category: 'sides',
+    description: 'קורנפלקס עם חלב קר. ארוחה שלמה בשתי דקות!',
+    price: 2, image: 'https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?w=600&q=80',
     tags: ['vegetarian'],
   },
   {
-    id: 'des3', name: 'גלידת וניל עם שוקולד חם', category: 'desserts',
-    description: 'גלידת וניל פרמיום עם ציפוי שוקולד חם',
-    price: 32, image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80',
-    tags: ['vegetarian'],
+    id: 's3', name: 'פירות חתוכים', category: 'sides',
+    description: 'תפוח, בננה ותפוז. שי חותך ומגיש!',
+    price: 3, image: 'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=600&q=80',
+    tags: ['vegan'],
   },
   {
-    id: 'des4', name: "צ'ורוס עם רוטב שוקולד", category: 'desserts',
-    description: "צ'ורוס פריך עם רוטב שוקולד עשיר",
-    price: 34, image: 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=600&q=80',
+    id: 's4', name: 'עגבנייה שרי', category: 'sides',
+    description: 'עגבניות שרי צבעוניות עם מעט מלח. מתוקות ומרעננות!',
+    price: 1, image: 'https://images.unsplash.com/photo-1592841200221-a6898f307baa?w=600&q=80',
+    tags: ['vegan'],
+  },
+  {
+    id: 's5', name: 'לחם עם גבינה ועגבנייה', category: 'sides',
+    description: 'פרוסות לחם עם גבינה קוטג׳ ועגבנייה. בריא וטעים!',
+    price: 2, image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80',
     tags: ['vegetarian'],
   },
-  // Deals
+
+  // 🥤 שתייה
   {
-    id: 'deal1', name: 'ארוחת יחיד', category: 'deals',
-    description: "המבורגר קלאסי + צ'יפס + שתייה",
-    price: 79, image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80',
+    id: 'd1', name: 'שוקו של שי', category: 'drinks',
+    description: 'חלב עם שלוש כפיות שוקו. שי מערבב חזק!',
+    price: 2, image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80',
     bestseller: true,
   },
   {
-    id: 'deal2', name: 'ארוחת פרימיום', category: 'deals',
-    description: "כל המבורגר + צ'יפס בטטה או טבעות בצל + שתייה",
-    price: 99, image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80',
+    id: 'd2', name: 'מיץ תפוזים טרי', category: 'drinks',
+    description: 'שי סוחט תפוזים בעצמו. 3 תפוזים בכוס אחת!',
+    price: 3, image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=600&q=80',
   },
   {
-    id: 'deal3', name: 'דאבל דיל', category: 'deals',
-    description: "2 המבורגרים + 2 צ'יפס + 2 שתייה",
-    price: 149, image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80',
+    id: 'd3', name: 'לימונדה ביתית', category: 'drinks',
+    description: 'לימון + מים + סוכר + קרח. קיץ בכוס!',
+    price: 2, image: 'https://images.unsplash.com/photo-1523677011781-c91d1bbe2f9e?w=600&q=80',
+    tags: ['vegan'],
   },
   {
-    id: 'deal4', name: 'ארוחה משפחתית', category: 'deals',
-    description: "4 המבורגרים + 2 צ'יפס גדולים + 2 טבעות בצל + 4 שתייה",
-    price: 279, image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80',
+    id: 'd4', name: 'מים עם קרח', category: 'drinks',
+    description: 'מים קרים מהמקרר. בריא ומרענן!',
+    price: 0, image: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=600&q=80',
+    tags: ['vegan'],
   },
   {
-    id: 'deal5', name: 'קומבו זוגי', category: 'deals',
-    description: "2 המבורגרים + צ'יפס גדול + 2 שתייה + קינוח",
-    price: 179, image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80',
+    id: 'd5', name: 'חלב עם ממרח', category: 'drinks',
+    description: 'כוס חלב קר בצד הכריך. שילוב מנצח!',
+    price: 1, image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=600&q=80',
+    tags: ['vegetarian'],
+  },
+
+  // 🍭 מתוקים
+  {
+    id: 'sw1', name: 'עוגיות שוקולד צ׳יפס', category: 'beer',
+    description: 'שי אפה אתמול! (עם עזרה קטנה). פריכות ומתוקות!',
+    price: 4, image: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&q=80',
+    bestseller: true,
+  },
+  {
+    id: 'sw2', name: 'גלידה כדור', category: 'beer',
+    description: 'כדור גלידה שוקולד או וניל מהמקפיא!',
+    price: 2, image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80',
+    tags: ['vegetarian'],
+  },
+  {
+    id: 'sw3', name: 'יוגורט עם דבש', category: 'beer',
+    description: 'יוגורט לבן עם דבש וגרנולה. בריא ומתוק!',
+    price: 3, image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80',
+    tags: ['vegetarian'],
+  },
+  {
+    id: 'sw4', name: 'בננה עם ממרח שוקולד', category: 'beer',
+    description: 'בננה שקולפת בקלות עם ממרח שוקולד. 30 שניות!',
+    price: 2, image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=600&q=80',
+    tags: ['vegetarian'],
+  },
+
+  // 🍳 ארוחות
+  {
+    id: 'des1', name: 'פנקייק שי', category: 'desserts',
+    description: 'קמח, ביצה, חלב וסוכר ונחוצ׳! שי מכין ואמא עוזרת קצת עם הכיריים.',
+    price: 6, image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80',
+    featured: true, chefsPick: true,
+  },
+  {
+    id: 'des2', name: 'פסטה ברוטב עגבניות', category: 'desserts',
+    description: 'פסטה מבושלת עם רוטב עגבניות מהצנצנת. שי בישל לבד!',
+    price: 5, image: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&q=80',
+    tags: ['vegetarian'],
+  },
+  {
+    id: 'des3', name: 'גרנולה עם חלב', category: 'desserts',
+    description: 'גרנולה פריכה, פירות יבשים וחלב קר. ארוחת בוקר כמו מלך!',
+    price: 3, image: 'https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?w=600&q=80',
+    tags: ['vegetarian'],
+  },
+
+  // 🌟 מנות מיוחדות
+  {
+    id: 'deal1', name: 'ארוחת שי המיוחדת', category: 'deals',
+    description: 'כריך גבינה + סלט ירקות + שוקו. הכי כיף!',
+    price: 7, image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80',
+    bestseller: true,
+  },
+  {
+    id: 'deal2', name: 'ארוחת בוקר מלאה', category: 'deals',
+    description: 'פרנץ׳ טוסט + פירות + מיץ תפוזים. יום טוב מתחיל כאן!',
+    price: 10, image: 'https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=600&q=80',
+  },
+  {
+    id: 'deal3', name: 'ארוחת חברים', category: 'deals',
+    description: '2 כריכים + 2 שתייה + עוגיות. לשני חברים הכי טובים!',
+    price: 12, image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&q=80',
+  },
+  {
+    id: 'deal4', name: 'מגש משפחתי', category: 'deals',
+    description: '4 כריכים + סלט + 4 שתייה. לכל המשפחה!',
+    price: 20, image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&q=80',
+  },
+  {
+    id: 'deal5', name: 'ארוחת מתוקים', category: 'deals',
+    description: 'פנקייק + גלידה + שוקו. לשבת בבוקר!',
+    price: 9, image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=600&q=80',
   },
 ]
 
 export const BREAD_CHOICES: BreadChoice[] = [
-  { id: 'regular', name: 'לחמנייה רגילה' },
-  { id: 'brioche', name: 'לחמניית בריוש' },
-  { id: 'none', name: 'ללא לחמנייה' },
-]
-
-export const COOKING_LEVELS: CookingLevel[] = [
-  { id: 'rare', name: 'Rare' },
-  { id: 'medium-rare', name: 'Medium Rare' },
-  { id: 'medium', name: 'Medium' },
-  { id: 'medium-well', name: 'Medium Well' },
-  { id: 'well-done', name: 'Well Done' },
+  { id: 'white', name: 'לחם לבן' },
+  { id: 'whole', name: 'לחם מלא' },
+  { id: 'pita', name: 'פיתה' },
 ]
 
 export const EXTRAS: Extra[] = [
-  { id: 'cheddar', name: "גבינת צ'דר", price: 6 },
-  { id: 'egg', name: 'ביצת עין', price: 8 },
-  { id: 'caramelized-onion', name: 'בצל מקורמל', price: 5 },
-  { id: 'mushrooms', name: 'פטריות מוקפצות', price: 7 },
-  { id: 'beef-bacon', name: 'בייקון בקר', price: 12 },
-  { id: 'jalapeno', name: 'חלפיניו', price: 4 },
+  { id: 'chocolate', name: 'ממרח שוקולד', price: 1 },
+  { id: 'cheese', name: 'גבינה צהובה', price: 1 },
+  { id: 'tomato', name: 'עגבנייה', price: 0 },
+  { id: 'cucumber', name: 'מלפפון', price: 0 },
+  { id: 'ketchup', name: 'קטשופ', price: 0 },
+  { id: 'honey', name: 'דבש', price: 1 },
 ]
 
 export const REMOVABLE_INGREDIENTS = [
-  'עגבנייה', 'בצל', 'חמוצים', 'חסה', 'רטבים',
+  'עגבנייה', 'מלפפון', 'גבינה', 'חסה', 'רטבים',
 ]
