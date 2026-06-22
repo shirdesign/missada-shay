@@ -3,10 +3,12 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Trash2 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { EXTRAS } from '../data/menu'
+import CoinWallet from '../components/CoinWallet'
 
 export default function CheckoutScreen() {
-  const { cart, cartTotal, tableNumber, removeFromCart, submitOrder, setScreen } = useApp()
+  const { cart, cartTotal, player, canAfford, removeFromCart, submitOrder, setScreen } = useApp()
   const [notes, setNotes] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const getCustomLabel = (item: typeof cart[0]) => {
     const parts: string[] = []
@@ -19,9 +21,14 @@ export default function CheckoutScreen() {
     return parts.join(' | ')
   }
 
-  const handleSubmit = () => {
-    submitOrder(notes)
-    setScreen('confirmation')
+  const handleSubmit = async () => {
+    setLoading(true)
+    try {
+      await submitOrder(notes)
+      setScreen('confirmation')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -32,7 +39,7 @@ export default function CheckoutScreen() {
           חזרה לתפריט
         </button>
         <h1 className="text-white font-bold text-xl">סיום הזמנה 🍽️</h1>
-        <div className="text-white/50 text-sm">שולחן {tableNumber}</div>
+        <CoinWallet cartTotal={cartTotal} />
       </div>
 
       <div className="flex-1 overflow-hidden flex">
@@ -68,8 +75,8 @@ export default function CheckoutScreen() {
             <h3 className="text-white font-bold mb-3 text-right">פרטי ההזמנה</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between text-white/60">
-                <span className="text-white">{tableNumber}</span>
-                <span>מספר שולחן</span>
+                <span className="text-white">{player?.name}</span>
+                <span>שם</span>
               </div>
               <div className="flex justify-between text-white/60">
                 <span className="text-white">{cart.reduce((s, i) => s + i.quantity, 0)}</span>
@@ -98,13 +105,19 @@ export default function CheckoutScreen() {
             <p className="text-white/30 text-xs mt-1 text-left">לא כסף אמיתי 😄</p>
           </div>
 
+          {!canAfford && (
+            <div className="bg-red-900/30 border border-red-500/40 rounded-xl p-3 text-center">
+              <p className="text-red-400 text-sm font-bold">אין מספיק מטבעות 🪙</p>
+              <p className="text-red-400/60 text-xs">יש לך {player?.coins ?? 0} מטבעות, ההזמנה עולה {cartTotal}</p>
+            </div>
+          )}
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={handleSubmit}
-            disabled={cart.length === 0}
+            disabled={cart.length === 0 || !canAfford || loading}
             className="w-full bg-dark-red hover:bg-dark-red-light disabled:opacity-40 text-white font-black py-5 rounded-2xl transition-colors text-xl shadow-2xl"
           >
-            שלח הזמנה לשי! 👨‍🍳
+            {loading ? '⏳ שולח לשי...' : 'שלח הזמנה לשי! 👨‍🍳'}
           </motion.button>
         </div>
       </div>

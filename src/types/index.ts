@@ -1,5 +1,11 @@
 export type Category = 'burgers' | 'sides' | 'drinks' | 'beer' | 'desserts' | 'deals'
 
+export interface Player {
+  id: string
+  name: string
+  coins: number
+}
+
 export interface MenuItem {
   id: string
   name: string
@@ -41,6 +47,7 @@ export interface CartItem {
 
 export interface Order {
   id: string
+  playerName: string
   tableNumber: number
   items: CartItem[]
   total: number
@@ -50,4 +57,4 @@ export interface Order {
   estimatedTime: number
 }
 
-export type Screen = 'home' | 'categories' | 'menu' | 'checkout' | 'confirmation' | 'admin'
+export type Screen = 'join' | 'home' | 'categories' | 'menu' | 'checkout' | 'confirmation' | 'admin'

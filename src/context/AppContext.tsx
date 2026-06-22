@@ -1,11 +1,15 @@
 import React, { createContext, useContext, useState, useCallback } from 'react'
-import { CartItem, MenuItem, Customization, Order, Screen } from '../types'
+import { CartItem, MenuItem, Customization, Order, Screen, Player } from '../types'
 import { EXTRAS } from '../data/menu'
+import { supabase } from '../lib/supabase'
+
+const STARTING_COINS = 50
 
 interface AppContextType {
   screen: Screen
   setScreen: (s: Screen) => void
-  tableNumber: number
+  player: Player | null
+  joinAsPlayer: (name: string) => Promise<void>
   cart: CartItem[]
   addToCart: (item: MenuItem, qty: number, customization?: Customization) => void
   removeFromCart: (id: string) => void
@@ -13,20 +17,32 @@ interface AppContextType {
   clearCart: () => void
   cartTotal: number
   cartCount: number
+  canAfford: boolean
   orders: Order[]
-  submitOrder: (notes: string) => Order
-  updateOrderStatus: (id: string, status: Order['status']) => void
+  submitOrder: (notes: string) => Promise<Order>
+  updateOrderStatus: (id: string, status: Order['status']) => Promise<void>
   lastOrder: Order | null
 }
 
 const AppContext = createContext<AppContextType | null>(null)
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [screen, setScreen] = useState<Screen>('home')
-  const [tableNumber] = useState(Math.floor(Math.random() * 20) + 1)
+  const [screen, setScreen] = useState<Screen>('join')
+  const [player, setPlayer] = useState<Player | null>(null)
   const [cart, setCart] = useState<CartItem[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [lastOrder, setLastOrder] = useState<Order | null>(null)
+
+  const joinAsPlayer = useCallback(async (name: string) => {
+    const { data, error } = await supabase
+      .from('players')
+      .insert({ name, coins: STARTING_COINS })
+      .select()
+      .single()
+    if (error) throw error
+    setPlayer({ id: data.id, name: data.name, coins: data.coins })
+    setScreen('home')
+  }, [])
 
   const calcItemPrice = (item: MenuItem, customization?: Customization) => {
     let price = item.price
@@ -41,8 +57,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = useCallback((item: MenuItem, qty: number, customization?: Customization) => {
     const unitPrice = calcItemPrice(item, customization)
-    const cartItemId = `${item.id}-${Date.now()}`
-    setCart(prev => [...prev, { id: cartItemId, menuItem: item, quantity: qty, customization, unitPrice }])
+    setCart(prev => [...prev, {
+      id: `${item.id}-${Date.now()}`,
+      menuItem: item,
+      quantity: qty,
+      customization,
+      unitPrice,
+    }])
   }, [])
 
   const removeFromCart = useCallback((id: string) => {
@@ -50,44 +71,82 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const updateQuantity = useCallback((id: string, qty: number) => {
-    if (qty <= 0) {
-      setCart(prev => prev.filter(i => i.id !== id))
-    } else {
-      setCart(prev => prev.map(i => i.id === id ? { ...i, quantity: qty } : i))
-    }
+    if (qty <= 0) setCart(prev => prev.filter(i => i.id !== id))
+    else setCart(prev => prev.map(i => i.id === id ? { ...i, quantity: qty } : i))
   }, [])
 
   const clearCart = useCallback(() => setCart([]), [])
 
   const cartTotal = cart.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0)
   const cartCount = cart.reduce((sum, i) => sum + i.quantity, 0)
+  const canAfford = !player || player.coins >= cartTotal
 
-  const submitOrder = useCallback((notes: string): Order => {
+  const submitOrder = useCallback(async (notes: string): Promise<Order> => {
+    if (!player) throw new Error('No player')
+
+    const orderId = String(Date.now()).slice(-6)
+    const estimatedTime = Math.floor(Math.random() * 10) + 10
+    const tableNumber = Math.floor(Math.random() * 8) + 1
+
+    // Insert order
+    const { error: orderError } = await supabase.from('orders').insert({
+      id: orderId,
+      player_id: player.id,
+      player_name: player.name,
+      table_number: tableNumber,
+      total_coins: cartTotal,
+      notes,
+      status: 'חדשה',
+      estimated_time: estimatedTime,
+    })
+    if (orderError) throw orderError
+
+    // Insert items
+    const items = cart.map(item => ({
+      order_id: orderId,
+      item_id: item.menuItem.id,
+      item_name: item.menuItem.name,
+      item_image: item.menuItem.image,
+      quantity: item.quantity,
+      unit_price: item.unitPrice,
+      customization: item.customization ?? {},
+    }))
+    const { error: itemsError } = await supabase.from('order_items').insert(items)
+    if (itemsError) throw itemsError
+
+    // Deduct coins
+    const newCoins = Math.max(0, player.coins - cartTotal)
+    await supabase.from('players').update({ coins: newCoins }).eq('id', player.id)
+    setPlayer(prev => prev ? { ...prev, coins: newCoins } : prev)
+
     const order: Order = {
-      id: String(Date.now()).slice(-6),
+      id: orderId,
+      playerName: player.name,
       tableNumber,
       items: [...cart],
       total: cartTotal,
       notes,
       status: 'חדשה',
       createdAt: new Date(),
-      estimatedTime: Math.floor(Math.random() * 10) + 15,
+      estimatedTime,
     }
     setOrders(prev => [order, ...prev])
     setLastOrder(order)
     setCart([])
     return order
-  }, [cart, cartTotal, tableNumber])
+  }, [player, cart, cartTotal])
 
-  const updateOrderStatus = useCallback((id: string, status: Order['status']) => {
+  const updateOrderStatus = useCallback(async (id: string, status: Order['status']) => {
+    await supabase.from('orders').update({ status }).eq('id', id)
     setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o))
   }, [])
 
   return (
     <AppContext.Provider value={{
-      screen, setScreen, tableNumber, cart, addToCart, removeFromCart,
-      updateQuantity, clearCart, cartTotal, cartCount, orders, submitOrder,
-      updateOrderStatus, lastOrder,
+      screen, setScreen, player, joinAsPlayer,
+      cart, addToCart, removeFromCart, updateQuantity, clearCart,
+      cartTotal, cartCount, canAfford,
+      orders, submitOrder, updateOrderStatus, lastOrder,
     }}>
       {children}
     </AppContext.Provider>

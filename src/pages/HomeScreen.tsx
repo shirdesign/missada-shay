@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion'
 import { useApp } from '../context/AppContext'
+import CoinWallet from '../components/CoinWallet'
 
 export default function HomeScreen() {
-  const { setScreen } = useApp()
+  const { setScreen, player } = useApp()
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-bg-black">
@@ -13,8 +14,17 @@ export default function HomeScreen() {
       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-gold to-transparent" />
 
+      {/* Player info top-right */}
+      {player && (
+        <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
+          <CoinWallet />
+          <div className="bg-bg-card/80 backdrop-blur px-3 py-1.5 rounded-xl border border-white/10 text-white text-sm font-bold">
+            {player.name}
+          </div>
+        </div>
+      )}
+
       <div className="relative z-10 flex flex-col items-center justify-between h-full py-12 px-8">
-        {/* Logo */}
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -34,26 +44,33 @@ export default function HomeScreen() {
           </div>
         </motion.div>
 
-        {/* Center */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 1 }}
+          transition={{ delay: 0.4 }}
           className="text-center"
         >
-          <p className="text-white/80 text-2xl font-light text-shadow">
-            ברוכים הבאים! שי מבשל רק בשבילכם 🍳
+          {player && (
+            <motion.p
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              className="text-white/80 text-2xl font-light text-shadow mb-2"
+            >
+              שלום {player.name}! 👋
+            </motion.p>
+          )}
+          <p className="text-white/60 text-lg font-light">
+            שי מבשל רק בשבילכם 🍳
           </p>
-          <p className="text-gold/70 text-lg mt-2 font-light">
-            כל מנה עולה מטבעות שי 🪙 — לא כסף אמיתי!
+          <p className="text-gold/60 text-sm mt-1">
+            יש לך 🪙{player?.coins ?? 50} מטבעות שי לבזבז
           </p>
         </motion.div>
 
-        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
+          transition={{ delay: 0.6 }}
           className="flex flex-col items-center gap-4"
         >
           <motion.button
@@ -64,7 +81,7 @@ export default function HomeScreen() {
           >
             לתפריט 🍽️
           </motion.button>
-          <p className="text-white/40 text-sm">לחצו להתחלה</p>
+          <p className="text-white/30 text-sm">לחצו להתחלה</p>
         </motion.div>
       </div>
 

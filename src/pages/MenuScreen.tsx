@@ -6,6 +6,7 @@ import { MENU_ITEMS } from '../data/menu'
 import { useApp } from '../context/AppContext'
 import ItemModal from '../components/ItemModal'
 import CartPanel from '../components/CartPanel'
+import CoinWallet from '../components/CoinWallet'
 
 const CATEGORY_LABELS: Record<Category, string> = {
   burgers: '🥪 כריכים ולחמים',
@@ -24,7 +25,7 @@ const DIET_FILTERS = [
 interface Props { initialCategory: Category; onBack: () => void }
 
 export default function MenuScreen({ initialCategory, onBack }: Props) {
-  const { cartCount, cartTotal, tableNumber } = useApp()
+  const { cartCount, cartTotal } = useApp()
   const [category, setCategory] = useState<Category>(initialCategory)
   const [search, setSearch] = useState('')
   const [dietFilter, setDietFilter] = useState<string[]>([])
@@ -63,8 +64,8 @@ export default function MenuScreen({ initialCategory, onBack }: Props) {
           <span className="text-xl">👨‍🍳</span>
           <span className="text-white font-black">מסעדת שי</span>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="text-white/50 text-sm">שולחן {tableNumber}</span>
+        <div className="flex items-center gap-3">
+          <CoinWallet cartTotal={cartTotal} />
           {cartCount > 0 && (
             <motion.button
               whileTap={{ scale: 0.95 }}

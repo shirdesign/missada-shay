@@ -15,7 +15,7 @@ const CATEGORIES: { id: Category; name: string; icon: string; image: string; des
 interface Props { onSelectCategory: (cat: Category) => void }
 
 export default function CategoriesScreen({ onSelectCategory }: Props) {
-  const { setScreen, tableNumber } = useApp()
+  const { setScreen, player } = useApp()
 
   return (
     <div className="w-full h-full bg-bg-black flex flex-col overflow-hidden">
@@ -28,7 +28,7 @@ export default function CategoriesScreen({ onSelectCategory }: Props) {
           <span className="text-2xl">👨‍🍳</span>
           <h1 className="text-white font-black text-xl">מסעדת שי</h1>
         </div>
-        <div className="text-white/50 text-sm">שולחן {tableNumber}</div>
+        <div className="text-white/50 text-sm">{player?.name}</div>
       </div>
 
       <div className="text-center py-5">
