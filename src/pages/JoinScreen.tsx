@@ -105,6 +105,13 @@ export default function JoinScreen() {
         <p className="text-white/20 text-xs mt-4">
           כל לקוח מקבל 50 מטבעות שי להוצאה במסעדה
         </p>
+
+        <button
+          onClick={() => joinAsPlayer('👨‍🍳 שי')}
+          className="mt-4 text-white/30 hover:text-white/60 text-xs underline transition-colors"
+        >
+          👨‍🍳 מטבח שי (כניסה לשי בלבד)
+        </button>
       </motion.div>
     </div>
   )
