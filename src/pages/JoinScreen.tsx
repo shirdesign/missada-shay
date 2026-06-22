@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useApp } from '../context/AppContext'
 
@@ -10,13 +10,17 @@ export default function JoinScreen() {
   const [avatar, setAvatar] = useState('😄')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleJoin = async () => {
-    const trimmed = name.trim()
+    // read from ref as fallback for cases where React state didn't update
+    const value = name || inputRef.current?.value || ''
+    const trimmed = value.trim()
     if (!trimmed) { setError('תכתוב את השם שלך!'); return }
     setLoading(true)
     try {
       await joinAsPlayer(`${avatar} ${trimmed}`)
+
     } catch {
       setError('משהו השתבש, נסה שוב')
       setLoading(false)
@@ -75,6 +79,7 @@ export default function JoinScreen() {
         {/* Name input */}
         <div className="mb-4">
           <input
+            ref={inputRef}
             type="text"
             placeholder="מה השם שלך?"
             value={name}

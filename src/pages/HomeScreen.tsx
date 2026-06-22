@@ -81,7 +81,13 @@ export default function HomeScreen() {
           >
             לתפריט 🍽️
           </motion.button>
-          <p className="text-white/30 text-sm">לחצו להתחלה</p>
+          <motion.button
+            onClick={() => setScreen('admin')}
+            whileTap={{ scale: 0.97 }}
+            className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-sm font-medium px-6 py-3 rounded-xl border border-white/20 transition-colors"
+          >
+            👨‍🍳 מטבח שי — צפייה בהזמנות
+          </motion.button>
         </motion.div>
       </div>
 

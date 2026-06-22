@@ -58,3 +58,4 @@ export interface Order {
 }
 
 export type Screen = 'join' | 'home' | 'categories' | 'menu' | 'checkout' | 'confirmation' | 'admin'
+

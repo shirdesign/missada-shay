@@ -9,12 +9,10 @@ import CheckoutScreen from './pages/CheckoutScreen'
 import ConfirmationScreen from './pages/ConfirmationScreen'
 import AdminScreen from './pages/AdminScreen'
 import { Category } from './types'
-import { ChefHat } from 'lucide-react'
 
 function Inner() {
   const { screen, setScreen } = useApp()
   const [menuCategory, setMenuCategory] = useState<Category>('burgers')
-  const [showAdmin, setShowAdmin] = useState(false)
 
   const pageVariants = {
     initial: { opacity: 0, y: 10 },
@@ -49,22 +47,8 @@ function Inner() {
           )}
           {screen === 'checkout' && <CheckoutScreen />}
           {screen === 'confirmation' && <ConfirmationScreen />}
+          {screen === 'admin' && <AdminScreen onClose={() => setScreen('home')} />}
         </motion.div>
-      </AnimatePresence>
-
-      {/* Admin button — subtle, bottom-left corner */}
-      {screen !== 'join' && (
-        <button
-          onClick={() => setShowAdmin(true)}
-          className="fixed bottom-4 right-4 z-40 text-white/10 hover:text-white/40 transition-colors p-2"
-          title="מטבח שי"
-        >
-          <ChefHat size={18} />
-        </button>
-      )}
-
-      <AnimatePresence>
-        {showAdmin && <AdminScreen onClose={() => setShowAdmin(false)} />}
       </AnimatePresence>
     </div>
   )
