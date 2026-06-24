@@ -1,8 +1,32 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Search, TrendingUp, Clock, CheckCircle, Package, Wifi } from 'lucide-react'
+import { X, Search, TrendingUp, Clock, CheckCircle, Package, Wifi, ChefHat } from 'lucide-react'
 import { supabase, DbOrder, DbOrderItem } from '../lib/supabase'
 import { Order } from '../types'
+import { RECIPES, Recipe } from '../data/recipes'
+import RecipeModal from '../components/RecipeModal'
+
+// איחוד פריטים זהים בהזמנה — מציג כל מנה פעם אחת עם מספר הכמות לידה
+interface GroupedItem {
+  item_id: string
+  item_name: string
+  item_image: string
+  quantity: number
+}
+function groupItems(items: DbOrderItem[]): GroupedItem[] {
+  const map = new Map<string, GroupedItem>()
+  for (const it of items) {
+    const existing = map.get(it.item_id)
+    if (existing) existing.quantity += it.quantity
+    else map.set(it.item_id, {
+      item_id: it.item_id,
+      item_name: it.item_name,
+      item_image: it.item_image,
+      quantity: it.quantity,
+    })
+  }
+  return [...map.values()]
+}
 
 const STATUSES: Order['status'][] = ['חדשה', 'התקבלה', 'בהכנה', 'מוכנה', 'נמסרה']
 const STATUS_COLORS: Record<string, string> = {
@@ -24,6 +48,7 @@ export default function AdminScreen({ onClose }: Props) {
   const [search, setSearch] = useState('')
   const [connected, setConnected] = useState(false)
   const [newOrderId, setNewOrderId] = useState<string | null>(null)
+  const [recipeItem, setRecipeItem] = useState<{ name: string; image: string; recipe?: Recipe } | null>(null)
 
   // Load existing orders + realtime
   useEffect(() => {
@@ -191,10 +216,20 @@ export default function AdminScreen({ onClose }: Props) {
                         <div className="text-white/40 text-sm">שולחן {order.table_number}</div>
                         <div className="text-gold font-black">#{order.id}</div>
                       </div>
-                      <div className="space-y-1">
-                        {order.items.map(item => (
-                          <div key={item.id} className="flex items-center justify-end gap-2 text-sm">
-                            <span className="text-white/60">{item.item_name} × {item.quantity}</span>
+                      <div className="space-y-1.5">
+                        {groupItems(order.items).map(item => (
+                          <div key={item.item_id} className="flex items-center justify-end gap-2 text-sm">
+                            <button
+                              onClick={() => setRecipeItem({ name: item.item_name, image: item.item_image, recipe: RECIPES[item.item_id] })}
+                              className="flex items-center gap-1 bg-dark-red/80 hover:bg-dark-red text-white text-xs font-bold px-2.5 py-1 rounded-lg transition-colors"
+                            >
+                              <ChefHat size={13} />
+                              להכנה
+                            </button>
+                            <span className="text-white/60">{item.item_name}</span>
+                            <span className="flex-shrink-0 min-w-[1.5rem] h-6 px-1.5 bg-gold/20 text-gold font-black rounded-md flex items-center justify-center text-xs">
+                              ×{item.quantity}
+                            </span>
                             <img src={item.item_image} alt="" className="w-7 h-7 rounded-lg object-cover" />
                           </div>
                         ))}
@@ -218,6 +253,18 @@ export default function AdminScreen({ onClose }: Props) {
           </div>
         )}
       </div>
+
+      {/* חלון מתכון ושלבי הכנה — פשוט לילדים */}
+      <AnimatePresence>
+        {recipeItem && (
+          <RecipeModal
+            itemName={recipeItem.name}
+            itemImage={recipeItem.image}
+            recipe={recipeItem.recipe}
+            onClose={() => setRecipeItem(null)}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }

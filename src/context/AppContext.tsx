@@ -22,6 +22,9 @@ interface AppContextType {
   submitOrder: (notes: string) => Promise<Order>
   updateOrderStatus: (id: string, status: Order['status']) => Promise<void>
   lastOrder: Order | null
+  adminGateOpen: boolean
+  openAdminGate: () => void
+  closeAdminGate: () => void
 }
 
 const AppContext = createContext<AppContextType | null>(null)
@@ -32,6 +35,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [lastOrder, setLastOrder] = useState<Order | null>(null)
+  const [adminGateOpen, setAdminGateOpen] = useState(false)
+
+  const openAdminGate = useCallback(() => setAdminGateOpen(true), [])
+  const closeAdminGate = useCallback(() => setAdminGateOpen(false), [])
 
   const joinAsPlayer = useCallback(async (name: string) => {
     const { data, error } = await supabase
@@ -57,13 +64,23 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = useCallback((item: MenuItem, qty: number, customization?: Customization) => {
     const unitPrice = calcItemPrice(item, customization)
-    setCart(prev => [...prev, {
-      id: `${item.id}-${Date.now()}`,
-      menuItem: item,
-      quantity: qty,
-      customization,
-      unitPrice,
-    }])
+    const customKey = JSON.stringify(customization ?? null)
+    setCart(prev => {
+      // אם כבר יש פריט זהה (אותה מנה ואותן בקשות) — מגדילים את הכמות במקום לפתוח שורה חדשה
+      const existing = prev.find(
+        i => i.menuItem.id === item.id && JSON.stringify(i.customization ?? null) === customKey
+      )
+      if (existing) {
+        return prev.map(i => i === existing ? { ...i, quantity: i.quantity + qty } : i)
+      }
+      return [...prev, {
+        id: `${item.id}-${Date.now()}`,
+        menuItem: item,
+        quantity: qty,
+        customization,
+        unitPrice,
+      }]
+    })
   }, [])
 
   const removeFromCart = useCallback((id: string) => {
@@ -147,6 +164,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       cart, addToCart, removeFromCart, updateQuantity, clearCart,
       cartTotal, cartCount, canAfford,
       orders, submitOrder, updateOrderStatus, lastOrder,
+      adminGateOpen, openAdminGate, closeAdminGate,
     }}>
       {children}
     </AppContext.Provider>

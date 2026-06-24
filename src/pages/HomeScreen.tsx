@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext'
 import CoinWallet from '../components/CoinWallet'
 
 export default function HomeScreen() {
-  const { setScreen, player } = useApp()
+  const { setScreen, player, openAdminGate } = useApp()
 
   return (
     <div className="relative w-full h-full overflow-hidden bg-bg-black">
@@ -82,7 +82,7 @@ export default function HomeScreen() {
             לתפריט 🍽️
           </motion.button>
           <motion.button
-            onClick={() => setScreen('admin')}
+            onClick={openAdminGate}
             whileTap={{ scale: 0.97 }}
             className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white/70 hover:text-white text-sm font-medium px-6 py-3 rounded-xl border border-white/20 transition-colors"
           >
